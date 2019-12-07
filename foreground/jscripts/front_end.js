@@ -11,7 +11,6 @@ var text2 = document.getElementById("text2");
 var text3 = document.getElementById("text3");
 var text4 = document.getElementById("text4");
 
-
 var point_num = 0;
 var point = new Array();
 var Point = new Object();
@@ -63,8 +62,10 @@ video.addEventListener('loadeddata', function () {
     // var canvas = document.createElement("canvas");
     // var img = document.createElement("img");
     canvas.strokeStyle = "red";
-    canvas.width = this.videoWidth*scale;
-    canvas.height = this.videoHeight*scale;
+    // canvas.width = this.videoWidth*scale;
+    // canvas.height = this.videoHeight*scale;
+    canvas.width = 400;
+    canvas.height = 280;
     canvas.getContext("2d").drawImage(this,0,0,canvas.width,canvas.height);
     global_img = canvas.toDataURL("image/png");
     img.src = global_img;
@@ -74,8 +75,6 @@ video.addEventListener('loadeddata', function () {
     // canvas.appendChild(img);
     // div1.appendChild(img);
 });
-
-
 
 
 canvas.addEventListener("click",function() {
@@ -92,7 +91,7 @@ canvas.addEventListener("click",function() {
     // ctx.clearRect(0,0,500,500);
     ctx.beginPath();
     ctx.fillStyle="red";
-    ctx.arc(x,y,1,0,180);
+    ctx.arc(x,y,2,0,180);
     ctx.fill();
     Point.x = x;
     Point.y = y;
@@ -109,9 +108,6 @@ function addCoorValue(num,p) {
     text.value = strXY;
 }
 
-button1.addEventListener("click",function() {
-
-})
 
 button2.addEventListener("click",function() {
     var ctx = canvas.getContext("2d");
