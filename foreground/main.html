@@ -7,10 +7,11 @@
     </head>
 
     <body>
-        <form action="" enctype="multipart/form-data" method="GET">
+        <form action="" target="test" enctype="multipart/form-data" method="GET">
             <input type="file" name="file" id="file"  />
             <input type="submit" name="submit1" id="submit1" value="提交"/>
         </form>
+        <iframe name="test" style="display:none"></iframe>
         <div id="div1">
             <video controls  src=""  id="video"></video>
         </div>
@@ -19,8 +20,10 @@
             <canvas id="canvas">
                 <img src="" id="img" />
             </canvas>
+        
 
-            <form action="" enctype="multipart/form-data" method="GET">
+
+            <form action="" target="test2" enctype="multipart/form-data" method="GET">
                 <input type="text" name="text1" id="text1" value="第一个坐标值" class="text"/>
                 <br />
                 <input type="text" name="text2" id="text2" value="第二个坐标值" class="text"/>
@@ -28,12 +31,19 @@
                 <input type="text" name="text3" id="text3" value="第三个坐标值" class="text"/>
                 <br />
                 <input type="text" name="text4" id="text4" value="第四个坐标值" class="text"/>    
-                <input type="submit" name="submit2" id="submit2" />
+                <input type="submit" name="submit2" id="submit2" value="提交" />
                 <input type="button" name="clear" id="button2" value="清除" class="button" />    
-            </form>    
+            </form>
+            <iframe name="test2" style="display:none"></iframe>
         </div>
-        <!-- <input type="button" name="clear" id="button2" value="清除" class="button" />     -->
-        <div id="div4"><p>返回结果：</p></div>
+
+        <div id="div4">
+            <p id="process" hidden="hidden" >正在处理中。。。</p>
+            <p id="return_ans" hidden="hidden">返回结果：</p>
+        </div>
+        <div id="div5">
+            <video controls  src=""  id="video2"></video>
+        </div>
         <script src="jscripts/front_end.js"></script>
         <script
 			  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

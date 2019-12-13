@@ -4,12 +4,14 @@ var input = document.getElementById("file");
 var canvas = document.getElementById("canvas");
 var img = document.getElementById("img");
 var div3 = document.getElementById("div3");
-var button1 = document.getElementById("button1");
 var button2 = document.getElementById("button2");
 var text1 = document.getElementById("text1");
 var text2 = document.getElementById("text2");
 var text3 = document.getElementById("text3");
 var text4 = document.getElementById("text4");
+var process = document.getElementById("process");
+var return_ans = document.getElementById("return_ans");
+var submit2 = document.getElementById("submit2");
 
 var point_num = 0;
 var point = new Array();
@@ -82,7 +84,7 @@ canvas.addEventListener("click",function() {
         alert("请点击确认或者清除,当前point_num"+point_num);
         return;
     }
-    alert(point_num);
+    // alert(point_num);
     var p = this.getBoundingClientRect();
     var x = event.clientX - p.left * (this.width / p.width);
     var y = event.clientY - p.top * (this.height / p.height);
@@ -119,3 +121,35 @@ button2.addEventListener("click",function() {
     text3.value = "";
     text4.value = "";
 })
+
+
+submit2.addEventListener("click",function() {
+    process.style.display = "block";
+});
+
+
+
+// function showVideo()
+// {
+//   var xmlhttp;
+//   if (window.XMLHttpRequest)
+//   {
+//     // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+//     xmlhttp=new XMLHttpRequest();
+//   }
+//   else
+//   {
+//     // IE6, IE5 浏览器执行代码
+//     xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+//   }
+//   xmlhttp.onreadystatechange=function()
+//   {
+//     if (xmlhttp.readyState==4 && xmlhttp.status==200)
+//     {
+//       document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
+//       document.getElementById("video2").src = "";
+//     }
+//   }
+//   xmlhttp.open("GET","",true);
+//   xmlhttp.send();
+// }
