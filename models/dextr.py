@@ -1,9 +1,11 @@
-i#!/home/ping501f/anaconda3/envs/py36/bin/python
+#!/home/ping501f/anaconda3/envs/py36/bin/python
 # -*- coding: utf-8 -*-mport numpy as np
 
 import sys
+import os
 from cv2 import VideoCapture
 from collections import OrderedDict
+import numpy as np
 
 import torch
 import torch.nn.functional as F
@@ -19,7 +21,7 @@ MODEL_CKPT_PATH = os.path.join(DEXTR_ROOT, "models/dextr_pascal-sbd.pth")
 
 def get_expt_coordinate(expt: str) -> np.array:
     expt_list = [float(i) for i in expt.split('|')]
-    return np.array(expt_list, dtype=np.int).reshape(4, 2)
+    return np.array(expt_list, dtype=np.float).reshape(4, 2)
 
 
 def get_first_frame(video_path: str) -> np.array:
@@ -74,7 +76,7 @@ def gen_mask(outputs, bbox, im_size, pad, thres):
     mask = helpers.crop2fullmask(pred, bbox, im_size=im_size, zero_pad=True, relax=pad) > thres
 
 
-def gen_init_mask(video_path: str, extreme_points:str):
+def gen_init_mask(video_path: str, extreme_points: str):
     """ Generate mask of a single image by 4 extreme points.
 
     Args:
