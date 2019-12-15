@@ -62,7 +62,7 @@ def to_onehot_anno(anno, n_object=None):
     if not n_object:
         n_object = len(anno.unique())
     oh_anno = [anno == i for i in range(n_object)]
-    oh_anno = numpy.stack(oh_anno)
+    oh_anno = np.stack(oh_anno)
     return oh_anno
 
 

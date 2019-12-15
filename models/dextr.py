@@ -19,36 +19,37 @@ from dataloaders import helpers as helpers
 MODEL_CKPT_PATH = os.path.join(DEXTR_ROOT, "models/dextr_pascal-sbd.pth")
 
 
-def get_expt_coordinate(expt: str) -> np.array:
+def get_expt_coordinate(expt: str) -> np.ndarray:
     expt_list = [float(i) for i in expt.split('|')]
-    return np.array(expt_list, dtype=np.float).reshape(4, 2)
+    return np.array(expt_list, dtype=np.int).reshape(4, 2)
 
 
-def get_first_frame(video_path: str) -> np.array:
+def get_first_frame(video_path: str) -> np.ndarray:
     video = VideoCapture(video_path)
     success, frame = video.read()
     return frame
 
 
-def get_inputs(image, bbox, pad):
+def get_inputs(image, bbox, expt, pad):
     crop_image = helpers.crop_from_bbox(image, bbox, zero_pad=True)
     resize_image = helpers.fixed_resize(crop_image, (512, 512)).astype(np.float32)
 
     #  Generate extreme point heat map normalized to image values
-    extreme_points = extreme_points_ori - [np.min(extreme_points_ori[:, 0]), np.min(extreme_points_ori[:, 1])] + [pad, pad]
+    extreme_points = expt - [np.min(expt[:, 0]), np.min(expt[:, 1])] + [pad, pad]
     extreme_points = (512 * extreme_points * [1 / crop_image.shape[1], 1 / crop_image.shape[0]]).astype(np.int)
     extreme_heatmap = helpers.make_gt(resize_image, extreme_points, sigma=10)
     extreme_heatmap = helpers.cstm_normalize(extreme_heatmap, 255)
 
     #  Concatenate inputs and convert to tensor
     input_dextr = np.concatenate((resize_image, extreme_heatmap[:, :, np.newaxis]), axis=2)
-    inputs = torch.from_numpy(input_dextr.transpose((2, 0, 1))[np.newaxis, ...])
+    inputs = torch.tensor(input_dextr.transpose((2, 0, 1))[np.newaxis, ...])
+    return inputs
 
 
 def gen_seg(inputs):
     #  Create the network and load the weights
     net = resnet.resnet101(1, nInputChannels=4, classifier="psp")
-    state_dict_checkpoint = torch.load(model_path)
+    state_dict_checkpoint = torch.load(MODEL_CKPT_PATH)
 
     # Remove the prefix .module from the model when it is trained using DataParallel
     if 'module.' in list(state_dict_checkpoint.keys())[0]:
@@ -64,7 +65,7 @@ def gen_seg(inputs):
     inputs = inputs.cuda()
     with torch.no_grad():
         outputs = net.forward(inputs)
-    outputs = upsample(outputs, size=(512, 512), mode='bilinear', align_corners=True)
+    outputs = F.interpolate(outputs, size=(512, 512), mode='bilinear', align_corners=True)
 
     return outputs
 
@@ -74,6 +75,8 @@ def gen_mask(outputs, bbox, im_size, pad, thres):
     pred = 1 / (1 + np.exp(-pred))
     pred = np.squeeze(pred)
     mask = helpers.crop2fullmask(pred, bbox, im_size=im_size, zero_pad=True, relax=pad) > thres
+
+    return mask
 
 
 def gen_init_mask(video_path: str, extreme_points: str):
@@ -95,7 +98,7 @@ def gen_init_mask(video_path: str, extreme_points: str):
     image = get_first_frame(video_path)
     extreme_points = get_expt_coordinate(extreme_points)
     bbox = helpers.get_bbox(image, points=extreme_points, pad=pad, zero_pad=True)
-    inputs = get_inputs(image, bbox, pad)
+    inputs = get_inputs(image, bbox, extreme_points, pad)
     outputs = gen_seg(inputs) 
     mask = gen_mask(outputs, bbox, image.shape[:2], pad, thres)
 
