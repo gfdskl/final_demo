@@ -6,6 +6,7 @@ import os
 from cv2 import VideoCapture
 from collections import OrderedDict
 import numpy as np
+from PIL import Image
 
 import torch
 import torch.nn.functional as F
@@ -17,6 +18,9 @@ import networks.deeplab_resnet as resnet
 from dataloaders import helpers as helpers
 
 MODEL_CKPT_PATH = os.path.join(DEXTR_ROOT, "models/dextr_pascal-sbd.pth")
+
+MASK_SAVE_PATH = os.path.join(os.getcwd(), "mask.jpg")
+OVERLAY_SAVE_PATH = os.path.join(os.getcwd(), "overlay.jpg")
 
 
 def get_expt_coordinate(expt: str) -> np.ndarray:
@@ -79,15 +83,14 @@ def gen_mask(outputs, bbox, im_size, pad, thres):
     return mask
 
 
-def gen_init_mask(video_path: str, extreme_points: str):
+def gen_init_mask(video_path: str, extreme_points: str) -> str:
     """ Generate mask of a single image by 4 extreme points.
 
     Args:
         video_path(str): path to original video.
         extreme_points(str): coordinate of 4 extreme points, split by '|'.
     Returns:
-        mask(np.ndarray): generated mask of initial frame, shape (h, w).
-        overlay_mask(np.ndarray): mixed mask for display, shape (h, w, 3).
+        overlay_save_path(str): path to the generated overlay mask.
     """
 
     pad = 50
@@ -106,4 +109,9 @@ def gen_init_mask(video_path: str, extreme_points: str):
 
     overlay_mask = helpers.overlay_masks(image/255, mask_arr)
 
-    return mask, overlay_mask
+    mask = Image.fromarray(mask)
+    mask.save(MASK_SAVE_PATH)
+    overlay_mask = Image.fromarray(overlay_mask)
+    overlay_mask.save(OVERLAY_SAVE_PATH)
+
+    return OVERLAY_SAVE_PATH

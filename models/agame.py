@@ -5,6 +5,7 @@ import sys
 import os
 import cv2
 import numpy as np
+from PIL import Image
 
 import torch
 
@@ -15,6 +16,7 @@ from models.agame_model import AGAME
 import utils
 
 MODEL_CKPT_PATH = os.path.join(AGAME_ROOT, "main_runfile_alpha_best.pth.tar")
+MASK_SAVE_PATH = os.path.join(os.getcwd(), "mask.jpg")
 
 VIDEO_WRITE_PATH = os.path.join(os.getcwd(), "gen_video.avi")
 
@@ -28,6 +30,11 @@ def video2frames(video_path: str):
         success, frame = video.read()
     frames = np.stack(frames)
     return frames # (n, h, w, c)
+
+
+def read_given_seg(mask_path: str):
+    mask = Image.open(mask_path)
+    return np.array(mask, dtype=np.int)
 
 
 def gen_segs(frames: np.ndarray, given_seg: np.ndarray):
@@ -85,15 +92,15 @@ def get_overlay_video(frames: np.ndarray, segs: np.ndarray):
     writer.release()
 
 
-def do_vos(video_path: str, given_seg: np.ndarray) -> str:
+def do_vos(video_path: str) -> str:
     """ Generate segmentation of given video and initial annotation, this function returns a path where the generated video saved.
 
     Args:
         video_path(str): path to original video.
-        given_seg(np.ndarray): segmentation of first frame of shape (h, w), generated from dextr.
     Returns:
         video_write_path(str): path to the generated video.
     """
+    given_seg = read_given_seg(MASK_SAVE_PATH)
     frames = video2frames(video_path)
     segs = gen_segs(frames, given_seg)
     get_overlay_video(frames, segs)
