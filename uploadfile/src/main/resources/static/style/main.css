@@ -1,0 +1,42 @@
+body{
+    background-image: url('../image/name.jpg');
+    background-size: 100%;
+}
+#canvas {
+    width: 400px;
+    height: 280px;
+    border: 1px solid #d3d3d3;
+    float: left;
+}
+
+#div1 {
+    position: relative;
+    left:0;
+    top:10;
+    /* width: 700px; */
+    height: 280px;
+}
+
+#div2 {
+    position: relative;
+    height: 300px;
+}
+
+.text {
+    display: block;
+}
+
+#div {
+    position: relative;
+    border:1px dashed #00F;
+}
+
+#img {
+    width: 400px;
+    height: 280px;
+}
+
+#video {
+    width: 700px;
+    height: 250px;
+}
