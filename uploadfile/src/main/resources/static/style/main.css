@@ -1,10 +1,6 @@
-body{
-    background-image: url('../image/name.jpg');
-    background-size: 100%;
-}
 #canvas {
-    width: 400px;
-    height: 280px;
+    width: 480px;
+    height: 360px;
     border: 1px solid #d3d3d3;
     float: left;
 }
@@ -12,31 +8,94 @@ body{
 #div1 {
     position: relative;
     left:0;
-    top:10;
-    /* width: 700px; */
-    height: 280px;
+    margin-right: 100px;
+    /* top:10; */
+    width: 480px;
+    height: 360px;
 }
 
 #div2 {
+    top: -20px;
     position: relative;
-    height: 300px;
+    height: 380px;
+}
+
+#div_no {
+    width: 100px;
 }
 
 .text {
     display: block;
 }
 
-#div {
+div {
+    display: inline-block;
     position: relative;
-    border:1px dashed #00F;
+    /* border:1px dashed #00F; */
+    float: left;
+}
+
+#div3 {
+    top: 20px;
+    margin: 0px;
 }
 
 #img {
-    width: 400px;
-    height: 280px;
+    width: 480px;
+    height: 360px;
 }
 
-#video {
-    width: 700px;
-    height: 250px;
+video {
+    width: 480px;
+    height: 360px;
+}
+
+#process {
+    /* text-align:center; */
+    font-weight: bold;
+    font-size: 20px;
+    /* display: none; */
+}
+
+
+
+#div5 {
+    /* width: 100%; */
+    text-align: center;
+    width: 50%;
+    height: 380px;
+    display: none;
+}
+
+#div6 {
+    text-align: center;
+    width: 50%;
+    height: 380px;
+    display: none;
+}
+
+#return_ans {
+    display: block;
+}
+
+#div4 {
+    margin-top: 20px;
+    width: 100%;
+    display: block;
+}
+
+#div2_p {
+    top:-20px;
+    margin-bottom: 5px;
+}
+
+#div {
+    width: 100%;
+    text-align: center;
+}
+
+#p1 {
+    font-weight: bold;
+    font-size: 30px;
+
 }

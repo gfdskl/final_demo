@@ -1,9 +1,17 @@
+// 路径不能有中文
 var video = document.getElementById("video");
+var div = document.getElementById("div");
 var div1 = document.getElementById("div1");
 var input = document.getElementById("file");
 var canvas = document.getElementById("canvas");
 var img = document.getElementById("img");
+var img2 = document.getElementById("img2");
+var div2 = document.getElementById("div2");
 var div3 = document.getElementById("div3");
+var div4 = document.getElementById("div4");
+var div5 = document.getElementById("div5");
+var div6 = document.getElementById("div6");
+var form = document.getElementById("form");
 //var button2 = document.getElementById("button2");
 // var text1 = document.getElementById("text1");
 // var text2 = document.getElementById("text2");
@@ -32,8 +40,8 @@ input.addEventListener("change",function() {
         reader.onloadend = function (e) {
             video.src = e.target.result;
             video.controls = "controls";
-            video.width = "700";
-            video.height = "300";
+            // video.width = "700";
+            // video.height = "300";
             video.id = "video";
             //e.target.result就是最后的路径地址
         };
@@ -56,18 +64,22 @@ input.addEventListener("change",function() {
 // }
 
 
+
+
+
 video.addEventListener('loadeddata', function () {
+
     // if (document.getElementById("canvas")) {
     //     document.getElementById("canvas").remove();
     // }
-    var scale = 0.3;
+    // var scale = 1;
     // var canvas = document.createElement("canvas");
     // var img = document.createElement("img");
     canvas.strokeStyle = "red";
     // canvas.width = this.videoWidth*scale;
     // canvas.height = this.videoHeight*scale;
-    canvas.width = 400;
-    canvas.height = 280;
+    canvas.width = 480;
+    canvas.height = 360;
     canvas.getContext("2d").drawImage(this,0,0,canvas.width,canvas.height);
     global_img = canvas.toDataURL("image/png");
     img.src = global_img;
@@ -84,10 +96,22 @@ canvas.addEventListener("click",function() {
         alert("请点击确认或者清除,当前point_num"+point_num);
         return;
     }
+    // alert(this.getBoundingClientRect().left);
+    // alert(this.getBoundingClientRect().top);
+
     // alert(point_num);
     var p = this.getBoundingClientRect();
     var x = event.clientX - p.left * (this.width / p.width);
     var y = event.clientY - p.top * (this.height / p.height);
+    // alert(1);
+    // x = event.clientX-div2.offsetLeft;
+    // alert(2);
+    // y = event.clientY-div2.offsetTop;
+    // alert(3);
+    // alert(div2.offsetLeft);
+    // var x = event.offsetX;
+    // var y = event.offsetY;
+    
     // alert("x:"+x+",y:"+y);
     var ctx = this.getContext("2d");
     // ctx.clearRect(0,0,500,500);
@@ -134,6 +158,7 @@ window.onload = function () {
     var input4 = document.getElementById('text4');    //获取输入框中内容
     //button点击事件
     document.getElementById('submit2').onclick = function () {
+        process.innerText = "正在处理中。。。";
         sendMsg();
     }
 
@@ -147,15 +172,23 @@ window.onload = function () {
         ajax({
             url : '/form?text1=' + input1.value + '&text2=' + input2.value  + '&text3=' + input3.value +  '&text4=' + input4.value,
             success : function (res) {
-                //console.log(res);
-                var imgdiv = document.getElementById("imgdiv");
-                var url = document.createElement("img");    //获取队列 为插入做准备
-                for(var i=0; i<res.size;i++){
-                    url.src = res[i];
-                    alert(res[i]);
-                    imgdiv.appendChild(url);
-                }
+                process.innerText = "处理完成";
+                // for(var i=0; i<res.size;i++){
 
+                // }
+                img2.src = "";
+                video2.src = "file:///";
+                div4.style.marginTop = -20;
+                div4.style.textAlign = "center";
+                process.style.fontSize = 30+"px";
+                process.innerHTML = "处理完成";
+                form.style.display = "none";
+                div.style.display = "none";
+                div1.style.display = "none";
+                div2.style.display = "none";
+                div3.style.display = "none";
+                div5.style.display = "block";
+                div6.style.display = "block";
             }
         });
         input1.value = "";
