@@ -12,7 +12,8 @@ var div4 = document.getElementById("div4");
 var div5 = document.getElementById("div5");
 var div6 = document.getElementById("div6");
 var form = document.getElementById("form");
-//var button2 = document.getElementById("button2");
+var button1 = document.getElementById("button1");
+var button2 = document.getElementById("button2");
 // var text1 = document.getElementById("text1");
 // var text2 = document.getElementById("text2");
 // var text3 = document.getElementById("text3");
@@ -72,14 +73,14 @@ video.addEventListener('loadeddata', function () {
     // if (document.getElementById("canvas")) {
     //     document.getElementById("canvas").remove();
     // }
-    // var scale = 1;
+    var scale = 0.7;
     // var canvas = document.createElement("canvas");
     // var img = document.createElement("img");
     canvas.strokeStyle = "red";
-    // canvas.width = this.videoWidth*scale;
-    // canvas.height = this.videoHeight*scale;
-    canvas.width = 480;
-    canvas.height = 360;
+    canvas.width = this.videoWidth*scale;
+    canvas.height = this.videoHeight*scale;
+    // canvas.width = 480;
+    // canvas.height = 360;
     canvas.getContext("2d").drawImage(this,0,0,canvas.width,canvas.height);
     global_img = canvas.toDataURL("image/png");
     img.src = global_img;
@@ -129,7 +130,9 @@ canvas.addEventListener("click",function() {
 function addCoorValue(num,p) {
     var whichText = "text"+num;
     var text = document.getElementById(whichText);
-    var strXY = "x:"+p.x.toFixed(1)+" y:"+p.y.toFixed(1);
+    p.x /= 0.7;
+    p.y /= 0.7;
+    var strXY = "x:"+p.x.toFixed(0)+" y:"+p.y.toFixed(0);
     // var strXY = "x:"+int(p.x)+" y:"+p.y.toFixed(1);
     text.value = strXY;
 }
@@ -150,7 +153,25 @@ button2.addEventListener("click",function() {
 //     process.style.display = "block";
 // });
 
-window.onload = function () {
+
+button1.addEventListener("click",function() {
+    form.reset();
+    video.src = "";
+    form.style.display = "block";
+    div.style.display = "block";
+    div1.style.display = "block";
+    div2.style.display = "block";
+    div3.style.display = "block";
+    button1.setAttribute("hidden",true);
+    div4.style.display = "block";
+    process.innerText = "你看不见我";
+    div4.style.textAlign = "left";
+    process.style.fontSize = 20+"px";
+    div5.style.display = "none";
+    div6.style.display = "none";
+})
+
+// window.onload = function () {
 
     var input1 = document.getElementById('text1');    //获取输入框中内容
     var input2 = document.getElementById('text2');    //获取输入框中内容
@@ -158,6 +179,7 @@ window.onload = function () {
     var input4 = document.getElementById('text4');    //获取输入框中内容
     //button点击事件
     document.getElementById('submit2').onclick = function () {
+        point_num = 0;
         process.innerText = "正在处理中。。。";
         sendMsg();
     }
@@ -167,7 +189,7 @@ window.onload = function () {
         var input2 = document.getElementById('text2');    //获取输入框中内容
         var input3 = document.getElementById('text3');    //获取输入框中内容
         var input4 = document.getElementById('text4');    //获取输入框中内容
-        // var url = document.getElementById('img1');    //获取队列 为插入做准备
+        // var url = document.getElementById('img1');    //获取队列为插入做准备
 
         ajax({
             url : '/form?text1=' + input1.value + '&text2=' + input2.value  + '&text3=' + input3.value +  '&text4=' + input4.value,
@@ -176,8 +198,10 @@ window.onload = function () {
                 // for(var i=0; i<res.size;i++){
 
                 // }
-                img2.src = "";
                 video2.src = "file:///";
+                img2.src = "file:///";
+                var context = canvas.getContext("2d");
+                context.clearRect(0,0,canvas.width,canvas.height);
                 div4.style.marginTop = -20;
                 div4.style.textAlign = "center";
                 process.style.fontSize = 30+"px";
@@ -187,6 +211,8 @@ window.onload = function () {
                 div1.style.display = "none";
                 div2.style.display = "none";
                 div3.style.display = "none";
+                div4.style.display = "block";
+                button1.removeAttribute("hidden");
                 div5.style.display = "block";
                 div6.style.display = "block";
             }
@@ -237,4 +263,4 @@ window.onload = function () {
             xhr.send(obj.params);
         }
     }
-}
+// }
