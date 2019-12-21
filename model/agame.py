@@ -9,14 +9,15 @@ from PIL import Image
 
 import torch
 
-AGAME_ROOT = "/home/ping501f/member/G3/agame-vos/"
+from .utils import overlay_masks
+
+AGAME_ROOT = "/home/ping501f/member/G3/agame-vos"
 sys.path.append(AGAME_ROOT)
 
 from models.agame_model import AGAME
-import utils
 
 MODEL_CKPT_PATH = os.path.join(AGAME_ROOT, "main_runfile_alpha_best.pth.tar")
-MASK_SAVE_PATH = os.path.join(os.getcwd(), "mask.jpg")
+MASK_SAVE_PATH = os.path.join(os.getcwd(), "mask.png")
 
 VIDEO_WRITE_PATH = os.path.join(os.getcwd(), "gen_video.avi")
 
@@ -26,10 +27,11 @@ def video2frames(video_path: str):
     frames = []
     success, frame = video.read()
     while success:
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frames.append(frame)
         success, frame = video.read()
-    frames = np.stack(frames)
-    return frames # (n, h, w, c)
+    frames = np.stack(frames) / 255
+    return frames.astype("float32") # (n, h, w, c)
 
 
 def read_given_seg(mask_path: str):
@@ -46,15 +48,38 @@ def gen_segs(frames: np.ndarray, given_seg: np.ndarray):
     frames = torch.tensor(frames).cuda()
     frames = frames.permute(0, 3, 1, 2)
     given_seg = torch.tensor(given_seg).cuda()
-    frames = frames.unsqueeze(0)
     given_seg = given_seg.view(1, 1, given_seg.size(0), given_seg.size(1))
-    model = AGAME()
-    model.load_state_dict(torch.load(MODEL_CKPT_PATH))
+    model = AGAME(
+        backbone=('embed_resnets16', (256, 100, True, ('layer4',),('layer4',),('layer2',),('layer1',))),
+        appearance=('GaussiansAgame', (2048, 512, .1, -2)),
+        dynamic=('SIM', (7, [('ConvRelu', (256+4+4,256,1,1,0)),
+                               ('DilationpyramidRelu',(256,256,3,1,(1,3,6),(1,3,6))),
+                               ('ConvRelu',(256*3,512,3,1,1))],)),
+        fusion=('FusionAgame',
+                ([('ConvRelu',(516,512,3,1,1)), ('ConvRelu',(512,128,3,1,1))],
+                 [('Conv', (128, 2, 1, 1, 0))])),
+        segmod=('UpsampleAgame', ({'s8':512,'s4':256}, 128)),
+        update_with_fine_scores=False, update_with_softmax_aggregation=False, process_first_frame=True,
+        output_logsegs=False, output_coarse_logsegs=False, output_segs=True)
+    model.load_state_dict(torch.load(MODEL_CKPT_PATH)['net'])
+    model.cuda()
     model.eval()
+
+    seqlen = 128
+    nframes = frames.shape[0]
+    partitioned_frames = [frames[start_idx : start_idx + seqlen] for start_idx in range(0, nframes, seqlen)]
+
+    init = True
     with torch.no_grad():
-        output, _ = model(frames, given_seg)
-        segs = output['segs'].squeeze()
-    return segs.detach().numpy() # (n, h, w)
+        states = None
+        segs = []
+        for part in partitioned_frames:
+            output, states = model(part.unsqueeze(0).cuda(), given_seg if init else None, states)
+            s = output['segs'].squeeze()
+            segs.append(s.detach().cpu().numpy())
+            init = False
+        segs = np.concatenate(segs, axis=0)
+    return segs # (n, h, w)
 
 
 def to_onehot_anno(anno, n_object=None):
@@ -67,7 +92,7 @@ def to_onehot_anno(anno, n_object=None):
         oh_anno: onne-hot annnotation of shape (n_object, h, w).
     """
     if not n_object:
-        n_object = len(anno.unique())
+        n_object = len(np.unique(anno))
     oh_anno = [anno == i for i in range(n_object)]
     oh_anno = np.stack(oh_anno)
     return oh_anno
@@ -82,12 +107,12 @@ def get_overlay_video(frames: np.ndarray, segs: np.ndarray):
     overlay = []
     for frame, seg in zip(frames, segs):
         seg = to_onehot_anno(seg) # (n_obj, h, w)
-        overlay.append(utils.overlay_masks(frame/255, seg))
+        overlay.append(overlay_masks(frame, seg[1]) * 255)
 
     writer = cv2.VideoWriter(VIDEO_WRITE_PATH, cv2.VideoWriter_fourcc(*'XVID'), 24, (frames.shape[2], frames.shape[1]))
 
     for ol in overlay:
-        writer.write(ol)
+        writer.write(ol.astype("uint8"))
     
     writer.release()
 

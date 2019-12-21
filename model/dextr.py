@@ -1,9 +1,9 @@
 #!/home/ping501f/anaconda3/envs/py36/bin/python
-# -*- coding: utf-8 -*-mport numpy as np
+# -*- coding: utf-8 -*-
 
 import sys
 import os
-from cv2 import VideoCapture
+import cv2
 from collections import OrderedDict
 import numpy as np
 from PIL import Image
@@ -19,8 +19,8 @@ from dataloaders import helpers as helpers
 
 MODEL_CKPT_PATH = os.path.join(DEXTR_ROOT, "models/dextr_pascal-sbd.pth")
 
-MASK_SAVE_PATH = os.path.join(os.getcwd(), "mask.jpg")
-OVERLAY_SAVE_PATH = os.path.join(os.getcwd(), "overlay.jpg")
+MASK_SAVE_PATH = os.path.join(os.getcwd(), "mask.png")
+OVERLAY_SAVE_PATH = os.path.join(os.getcwd(), "overlay.png")
 
 
 def get_expt_coordinate(expt: str) -> np.ndarray:
@@ -29,8 +29,9 @@ def get_expt_coordinate(expt: str) -> np.ndarray:
 
 
 def get_first_frame(video_path: str) -> np.ndarray:
-    video = VideoCapture(video_path)
+    video = cv2.VideoCapture(video_path)
     success, frame = video.read()
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     return frame
 
 
@@ -53,7 +54,7 @@ def get_inputs(image, bbox, expt, pad):
 def gen_seg(inputs):
     #  Create the network and load the weights
     net = resnet.resnet101(1, nInputChannels=4, classifier="psp")
-    state_dict_checkpoint = torch.load(MODEL_CKPT_PATH)
+    state_dict_checkpoint = torch.load(MODEL_CKPT_PATH, map_location=torch.device("cuda"))
 
     # Remove the prefix .module from the model when it is trained using DataParallel
     if 'module.' in list(state_dict_checkpoint.keys())[0]:
@@ -64,6 +65,7 @@ def gen_seg(inputs):
     else:
         new_state_dict = state_dict_checkpoint
     net.load_state_dict(new_state_dict)
+    net.cuda()
     net.eval()
     
     inputs = inputs.cuda()
@@ -75,7 +77,7 @@ def gen_seg(inputs):
 
 
 def gen_mask(outputs, bbox, im_size, pad, thres):
-    pred = np.transpose(outputs.detach().numpy()[0, ...], (1, 2, 0))
+    pred = np.transpose(outputs.detach().cpu().numpy()[0, ...], (1, 2, 0))
     pred = 1 / (1 + np.exp(-pred))
     pred = np.squeeze(pred)
     mask = helpers.crop2fullmask(pred, bbox, im_size=im_size, zero_pad=True, relax=pad) > thres
@@ -107,11 +109,11 @@ def gen_init_mask(video_path: str, extreme_points: str) -> str:
 
     mask_arr.append(mask)
 
-    overlay_mask = helpers.overlay_masks(image/255, mask_arr)
+    overlay_mask = helpers.overlay_masks(image/255, mask_arr) * 255
 
     mask = Image.fromarray(mask)
     mask.save(MASK_SAVE_PATH)
-    overlay_mask = Image.fromarray(overlay_mask)
+    overlay_mask = Image.fromarray(overlay_mask.astype("uint8"))
     overlay_mask.save(OVERLAY_SAVE_PATH)
 
     return OVERLAY_SAVE_PATH
