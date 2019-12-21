@@ -23,6 +23,7 @@
 }
 
 div {
+    /* display: inline; */
     position: relative;
     border:1px dashed #00F;
 }

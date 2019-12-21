@@ -60,17 +60,22 @@ video.addEventListener('loadeddata', function () {
     // if (document.getElementById("canvas")) {
     //     document.getElementById("canvas").remove();
     // }
-    var scale = 0.3;
+    var scale = 0.4;
     // var canvas = document.createElement("canvas");
     // var img = document.createElement("img");
     canvas.strokeStyle = "red";
-    // canvas.width = this.videoWidth*scale;
-    // canvas.height = this.videoHeight*scale;
-    canvas.width = 400;
-    canvas.height = 280;
+    canvas.width = this.videoWidth*scale;
+    canvas.height = this.videoHeight*scale;
+    alert(this.videoWidth);
+    alert(this.videoHeight);
+    // canvas.width = 400;
+    // canvas.height = 280;
     canvas.getContext("2d").drawImage(this,0,0,canvas.width,canvas.height);
     global_img = canvas.toDataURL("image/png");
+    document.getElementById("img1").src = global_img;
     img.src = global_img;
+    alert(img.width);
+    alert(img.height);
     canvas.getContext("2d").strokeStyle = "red";
     canvas.getContext("2d").strokeRect(0,0,canvas.width,canvas.height);//对边框的设置
     // div1.appendChild(canvas);
@@ -123,33 +128,32 @@ button2.addEventListener("click",function() {
 })
 
 
+
 submit2.addEventListener("click",function() {
     process.style.display = "block";
+    $.ajax({
+        url : "newsservlet",//请求地址
+        dataType : "json",//数据格式 
+        type : "post",//请求方式
+        async : false,//是否异步请求
+        success : function(data) {   //如何发送成功
+        for(var i=0;i<data.length;i++){    //遍历data数组
+                var ls = data[i];    
+                alert(ls);
+                
+            }
+
+            // $("#div5").html(html); //在html页面id=ulul的标签里显示html内容
+        }
+
+})
+})
+
+
+
+submit2.addEventListener("click",function() {
+    div5 = document.getElementById("div5")
+    url = "jscripts/zz.jpg"
+    img1 = document.getElementById("img1")
+    img1.src = url
 });
-
-
-
-// function showVideo()
-// {
-//   var xmlhttp;
-//   if (window.XMLHttpRequest)
-//   {
-//     // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
-//     xmlhttp=new XMLHttpRequest();
-//   }
-//   else
-//   {
-//     // IE6, IE5 浏览器执行代码
-//     xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-//   }
-//   xmlhttp.onreadystatechange=function()
-//   {
-//     if (xmlhttp.readyState==4 && xmlhttp.status==200)
-//     {
-//       document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
-//       document.getElementById("video2").src = "";
-//     }
-//   }
-//   xmlhttp.open("GET","",true);
-//   xmlhttp.send();
-// }

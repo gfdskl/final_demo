@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>cxsj demo</title>
+    <link rel="stylesheet" type="text/css" href="../static/style/main.css" />
+</head>
+<body>
+    <div id="div">
+        <p id="p1">上传视频并发送点信息</p>
+    </div>
+<!-- <div id="div"> -->
+    <form id="form" action="/upload" target="test" enctype="multipart/form-data" method="POST">
+        <input type="file" name="file" id="file"  />
+        <input type="submit" name="submit1" id="submit1" value="提交"/>
+    </form>
+    <iframe name="test" style="display:none"></iframe>
+<!-- </div> -->
+<div id="div1">
+    <video controls  src=""  id="video"></video>
+</div>
+
+<div id="div2">
+    <p id="div2_p">第一帧截图：</p>
+    <canvas id="canvas">
+        <img src="e:/xx.jpg" id="img" />
+    </canvas>
+</div>
+
+<div id="div3">
+    <input type="text" name="text1" id="text1" placeholder="第一个坐标值" class="text"/>
+    <br />
+    <input type="text" name="text2" id="text2" placeholder="第二个坐标值" class="text"/>
+    <br />
+    <input type="text" name="text3" id="text3" placeholder="第三个坐标值" class="text"/>
+    <br />
+    <input type="text" name="text4" id="text4" placeholder="第四个坐标值" class="text"/>
+    <button type="button" name="submit2" id="submit2">发送</button>
+    <input type="button" name="clear" id="button2" value="清除" class="button" />
+</div>
+
+<!-- <p id="p">hello</p> -->
+<div id="div4">
+    <p id="process" >你看不见我</p>
+    <button id="button1" hidden="hidden" style="width: 60px;height: 30px;font-size: large;font-weight: bold;">返回</button>
+</div>
+
+<div id="div5" >
+    <p >图片</p>
+    <img id="img2" />
+</div>
+
+<div id="div6">
+    <p >视频</p>
+    <video controls id="video2" ></video>
+</div>
+
+<script src="../static/jscripts/front_end.js"></script>
+<script
+        src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+        crossorigin="anonymous"></script>
+</body>
+</html>
