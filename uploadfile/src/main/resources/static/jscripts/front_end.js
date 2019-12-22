@@ -155,6 +155,8 @@ button2.addEventListener("click",function() {
 
 
 button1.addEventListener("click",function() {
+    var context = canvas.getContext("2d");
+    context.clearRect(0,0,canvas.width,canvas.height);
     form.reset();
     video.src = "";
     form.style.display = "block";
@@ -180,6 +182,9 @@ button1.addEventListener("click",function() {
     //button点击事件
     document.getElementById('submit2').onclick = function () {
         point_num = 0;
+        div4.style.textAlign = "center";
+        process.style.fontSize = 30+"px";
+        hidden_some_page();
         process.innerText = "正在处理中。。。";
         sendMsg();
     }
@@ -200,27 +205,26 @@ button1.addEventListener("click",function() {
                 // }
                 video2.src = "file:///";
                 img2.src = "file:///";
-                var context = canvas.getContext("2d");
-                context.clearRect(0,0,canvas.width,canvas.height);
-                div4.style.marginTop = -20;
-                div4.style.textAlign = "center";
-                process.style.fontSize = 30+"px";
                 process.innerHTML = "处理完成";
-                form.style.display = "none";
-                div.style.display = "none";
-                div1.style.display = "none";
-                div2.style.display = "none";
-                div3.style.display = "none";
-                div4.style.display = "block";
-                button1.removeAttribute("hidden");
-                div5.style.display = "block";
-                div6.style.display = "block";
+
             }
         });
         input1.value = "";
         input2.value = "";
         input3.value = "";
         input4.value = "";
+    }
+    
+    function hidden_some_page() {
+        form.style.display = "none";
+        div.style.display = "none";
+        div1.style.display = "none";
+        div2.style.display = "none";
+        div3.style.display = "none";
+        div4.style.display = "block";
+        button1.removeAttribute("hidden");
+        div5.style.display = "block";
+        div6.style.display = "block";
     }
 
     function ajax(obj) {
