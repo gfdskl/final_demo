@@ -19,7 +19,7 @@ from models.agame_model import AGAME
 MODEL_CKPT_PATH = os.path.join(AGAME_ROOT, "main_runfile_alpha_best.pth.tar")
 MASK_SAVE_PATH = os.path.join(os.getcwd(), "mask.png")
 
-VIDEO_WRITE_PATH = os.path.join(os.getcwd(), "gen_video.avi")
+VIDEO_WRITE_PATH = os.path.join(os.getcwd(), "gen_video.mp4")
 
 
 def video2frames(video_path: str):
@@ -109,7 +109,7 @@ def get_overlay_video(frames: np.ndarray, segs: np.ndarray):
         seg = to_onehot_anno(seg) # (n_obj, h, w)
         overlay.append(overlay_masks(frame, seg[1]) * 255)
 
-    writer = cv2.VideoWriter(VIDEO_WRITE_PATH, cv2.VideoWriter_fourcc(*'XVID'), 24, (frames.shape[2], frames.shape[1]))
+    writer = cv2.VideoWriter(VIDEO_WRITE_PATH, cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), 24, (frames.shape[2], frames.shape[1]))
 
     for ol in overlay:
         writer.write(ol.astype("uint8"))
