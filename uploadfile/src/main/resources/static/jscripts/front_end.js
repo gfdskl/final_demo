@@ -132,7 +132,7 @@ function addCoorValue(num,p) {
     var text = document.getElementById(whichText);
     p.x /= 0.7;
     p.y /= 0.7;
-    var strXY = "x:"+p.x.toFixed(0)+" y:"+p.y.toFixed(0);
+    var strXY = p.x.toFixed(0) + "," +p.y.toFixed(0);
     // var strXY = "x:"+int(p.x)+" y:"+p.y.toFixed(1);
     text.value = strXY;
 }
@@ -198,8 +198,11 @@ button1.addEventListener("click",function() {
                 // for(var i=0; i<res.size;i++){
 
                 // }
-                video2.src = "file:///";
-                img2.src = "file:///";
+
+                video2.src = res;
+                //img2.src = "file:///" + res[1];
+                alert(video2.src);
+                //alert(img2.src);
                 var context = canvas.getContext("2d");
                 context.clearRect(0,0,canvas.width,canvas.height);
                 div4.style.marginTop = -20;

@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
     <title>cxsj demo</title>
-    <link rel="stylesheet" type="text/css" href="../static/style/main.css" />
+    <link rel="stylesheet" type="text/css" href="style/main.css" />
 </head>
 <body>
-    <div id="div">
-        <p id="p1">上传视频并发送点信息</p>
-    </div>
+<div id="div">
+    <p id="p1">上传视频并发送点信息</p>
+</div>
 <!-- <div id="div"> -->
-    <form id="form" action="/upload" target="test" enctype="multipart/form-data" method="POST">
-        <input type="file" name="file" id="file"  />
-        <input type="submit" name="submit1" id="submit1" value="提交"/>
-    </form>
-    <iframe name="test" style="display:none"></iframe>
+<form id="form" action="/upload" target="test" enctype="multipart/form-data" method="POST">
+    <input type="file" name="file" id="file"  />
+    <input type="submit" name="submit1" id="submit1" value="提交"/>
+</form>
+<iframe name="test" style="display:none"></iframe>
 <!-- </div> -->
 <div id="div1">
     <video controls  src=""  id="video"></video>
@@ -55,7 +55,7 @@
     <video controls id="video2" ></video>
 </div>
 
-<script src="../static/jscripts/front_end.js"></script>
+<script src="jscripts/front_end.js"></script>
 <script
         src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="

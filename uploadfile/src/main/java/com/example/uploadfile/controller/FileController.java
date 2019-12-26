@@ -22,8 +22,8 @@ public class FileController{
                 if(file.isEmpty()){
                         //return ;
                 }
-                String fileName = file.getOriginalFilename();
-                String filepath = "D:/Junior/software/";
+                String fileName = "test01.mp4";
+                String filepath =  "/home/ping501f/member/G3/final_demo/";
                 File dest = new File(filepath + fileName);
                 try {
                         file.transferTo(dest);
@@ -38,15 +38,16 @@ public class FileController{
 
         @GetMapping("/form")
         //@ResponseBody
-        public String[] upForm(@RequestParam("text1") String text1,
+        public String upForm(@RequestParam("text1") String text1,
                              @RequestParam("text2") String text2,
                              @RequestParam("text3") String text3,
                              @RequestParam("text4") String text4) throws IOException, InterruptedException {
-                String coordinate = text1 + "|" +text2 + "|" + text3 + "|" + text4;
+                String coordinate = text1 + "," +text2 + "," + text3 + "," + text4;
+                String path = "/home/ping501f/member/G3/final_demo/test01.mp4";
 //                try {
                         //需传入的参数
                         //设置命令行传入参数
-                        String[] args = new String[] { "python", "D:/Junior/software/test.py", coordinate};
+                        String[] args = new String[] { "bash", "/home/ping501f/member/G3/final_demo/run.sh", path, coordinate};
                         Process pr = Runtime.getRuntime().exec(args);
                         BufferedReader in = new BufferedReader(new InputStreamReader(pr.getInputStream()));
                         String line = null;
@@ -55,8 +56,7 @@ public class FileController{
                         }
                         in.close();
                         pr.waitFor();
-                        String[] url = new String[]{"D:/Junior/software/uploadfile/src/main/resources/static/image/background1.jpg",
-                                "D:/Junior/software/uploadfile/src/main/resources/static/image/background1.jpg","1"};
+                        String url = "gen_video.mp4";
                         return url;
 //                } catch (Exception e) {
 //                        e.printStackTrace();
