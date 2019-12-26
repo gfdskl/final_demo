@@ -24,7 +24,7 @@ OVERLAY_SAVE_PATH = os.path.join(os.getcwd(), "overlay.png")
 
 
 def get_expt_coordinate(expt: str) -> np.ndarray:
-    expt_list = [float(i) for i in expt.split('|')]
+    expt_list = [float(i) for i in expt.split()]
     return np.array(expt_list, dtype=np.int).reshape(4, 2)
 
 

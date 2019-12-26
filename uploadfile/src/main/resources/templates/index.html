@@ -1,23 +1,24 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8" />
     <title>cxsj demo</title>
     <link rel="stylesheet" type="text/css" href="style/main.css" />
 </head>
 <body>
-<div id="div">
-    <p id="p1">上传视频并发送点信息</p>
-</div>
+    <div id="div">
+        <p id="p1">上传视频并发送信息</p>
+    </div>
 <!-- <div id="div"> -->
-<form id="form" action="/upload" target="test" enctype="multipart/form-data" method="POST">
-    <input type="file" name="file" id="file"  />
-    <input type="submit" name="submit1" id="submit1" value="提交"/>
-</form>
-<iframe name="test" style="display:none"></iframe>
+    <form id="form" action="/upload" target="test" enctype="multipart/form-data" method="POST">
+        <input type="file" name="file" id="file"  />
+        <input type="submit" name="submit1" id="submit1" value="提交"/>
+    </form>
+    <iframe name="test" style="display:none"></iframe>
 <!-- </div> -->
 <div id="div1">
-    <video controls  src=""  id="video"></video>
+    <img id = img1 src="background1.jpg" width="400px" height="350px"/>
+    <video controls id="video" hidden="hidden"></video>
 </div>
 
 <div id="div2">
@@ -41,19 +42,24 @@
 
 <!-- <p id="p">hello</p> -->
 <div id="div4">
-    <p id="process" >你看不见我</p>
+    <p id="process" ></p>
     <button id="button1" hidden="hidden" style="width: 60px;height: 30px;font-size: large;font-weight: bold;">返回</button>
 </div>
 
-<div id="div5" >
-    <p >图片</p>
-    <img id="img2" />
+<div id="div7" >
+    <p id="div6_p" >视频</p>
 </div>
 
-<div id="div6">
-    <p >视频</p>
-    <video controls id="video2" ></video>
+<div id="div6" >
+    <img id="img6" src="background1.jpg"
+    width="400px" height="350px"  />
+    <video controls id="video2" hidden="hidden"></video>
 </div>
+
+<!-- <div id="div7">
+    <img id="img6" src="2.jpg" hidden="hidden" />
+    <video controls id="video2" hidden="hidden"></video>
+</div> -->
 
 <script src="jscripts/front_end.js"></script>
 <script

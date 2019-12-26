@@ -42,6 +42,10 @@ div {
     height: 360px; */
 }
 
+#img6 {
+    vertical-align: middle;
+}
+
 video {
     width: 300px;
     height: 250px;
@@ -65,10 +69,38 @@ video {
 }
 
 #div6 {
+    position:relative;
+    /* display: table-cell; */
+    vertical-align: middle;
     text-align: center;
-    width: 50%;
+    width: 100%;
     height: 380px;
+    /* padding: 0px 430px; */
     display: none;
+    /* border:1px dashed rgb(40, 40, 66); */
+}
+
+#img6 {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform:translate(-50%,-50%);
+}
+
+#video2 {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform:translate(-50%,-50%);
+}
+
+#div7 {
+    /* display: table-cell; */
+    text-align:center; 
+    display: none;
+    width: 100%;
+    /* border:1px dashed rgb(165, 31, 93); */
+
 }
 
 #return_ans {
@@ -94,6 +126,12 @@ video {
 #p1 {
     font-weight: bold;
     font-size: 30px;
+}
+
+#video2 {
+    width: 40%;
+    height: 80%;
+    /* object-fit: fill; */
 }
 
 /* #button1 {  

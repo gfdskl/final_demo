@@ -5,22 +5,20 @@ var div1 = document.getElementById("div1");
 var input = document.getElementById("file");
 var canvas = document.getElementById("canvas");
 var img = document.getElementById("img");
-var img2 = document.getElementById("img2");
+var img1 = document.getElementById("img1");
+var img6 = document.getElementById("img6");
 var div2 = document.getElementById("div2");
 var div3 = document.getElementById("div3");
 var div4 = document.getElementById("div4");
-var div5 = document.getElementById("div5");
 var div6 = document.getElementById("div6");
+var div7 = document.getElementById("div7");
 var form = document.getElementById("form");
 var button1 = document.getElementById("button1");
 var button2 = document.getElementById("button2");
-// var text1 = document.getElementById("text1");
-// var text2 = document.getElementById("text2");
-// var text3 = document.getElementById("text3");
-// var text4 = document.getElementById("text4");
 var process = document.getElementById("process");
 var return_ans = document.getElementById("return_ans");
-// var submit2 = document.getElementById("submit2");
+
+var div6_p = document.getElementById("div6_p");
 
 var point_num = 0;
 var point = new Array();
@@ -30,65 +28,32 @@ var global_img;
 
 input.addEventListener("change",function() {
     // 如果网页上已有video元素，就删除原来的video。
-    // if (document.getElementById("video")) {
-    //     document.getElementById("video").remove();
-    // }
+
     var file = this.files[0];
     if (window.FileReader) {
         var reader = new FileReader();
         reader.readAsDataURL(file);
         //监听文件读取结束后事件
         reader.onloadend = function (e) {
+            video.style.display = "block";
+            img1.style.display = "none";
             video.src = e.target.result;
             video.controls = "controls";
-            // video.width = "700";
-            // video.height = "300";
             video.id = "video";
-            //e.target.result就是最后的路径地址
         };
     }
 });
 
-
-// function fun(x){
-//     var file = x.files[0];
-//       if (window.FileReader) {
-//                var reader = new FileReader();
-//                reader.readAsDataURL(file);
-//                //监听文件读取结束后事件
-//              reader.onloadend = function (e) {
-//                video.src = e.target.result;
-//                alert(video.src);
-//                    //e.target.result就是最后的路径地址
-//                };
-//           }
-// }
-
-
-
-
-
 video.addEventListener('loadeddata', function () {
-
-    // if (document.getElementById("canvas")) {
-    //     document.getElementById("canvas").remove();
-    // }
     var scale = 0.7;
-    // var canvas = document.createElement("canvas");
-    // var img = document.createElement("img");
     canvas.strokeStyle = "red";
     canvas.width = this.videoWidth*scale;
     canvas.height = this.videoHeight*scale;
-    // canvas.width = 480;
-    // canvas.height = 360;
     canvas.getContext("2d").drawImage(this,0,0,canvas.width,canvas.height);
     global_img = canvas.toDataURL("image/png");
     img.src = global_img;
     canvas.getContext("2d").strokeStyle = "red";
     canvas.getContext("2d").strokeRect(0,0,canvas.width,canvas.height);//对边框的设置
-    // div1.appendChild(canvas);
-    // canvas.appendChild(img);
-    // div1.appendChild(img);
 });
 
 
@@ -97,25 +62,11 @@ canvas.addEventListener("click",function() {
         alert("请点击确认或者清除,当前point_num"+point_num);
         return;
     }
-    // alert(this.getBoundingClientRect().left);
-    // alert(this.getBoundingClientRect().top);
-
-    // alert(point_num);
     var p = this.getBoundingClientRect();
     var x = event.clientX - p.left * (this.width / p.width);
     var y = event.clientY - p.top * (this.height / p.height);
-    // alert(1);
-    // x = event.clientX-div2.offsetLeft;
-    // alert(2);
-    // y = event.clientY-div2.offsetTop;
-    // alert(3);
-    // alert(div2.offsetLeft);
-    // var x = event.offsetX;
-    // var y = event.offsetY;
-    
-    // alert("x:"+x+",y:"+y);
     var ctx = this.getContext("2d");
-    // ctx.clearRect(0,0,500,500);
+
     ctx.beginPath();
     ctx.fillStyle="red";
     ctx.arc(x,y,2,0,180);
@@ -132,7 +83,7 @@ function addCoorValue(num,p) {
     var text = document.getElementById(whichText);
     p.x /= 0.7;
     p.y /= 0.7;
-    var strXY = p.x.toFixed(0) + "," +p.y.toFixed(0);
+    var strXY = p.x.toFixed(0)+","+p.y.toFixed(0);
     // var strXY = "x:"+int(p.x)+" y:"+p.y.toFixed(1);
     text.value = strXY;
 }
@@ -149,14 +100,15 @@ button2.addEventListener("click",function() {
     text4.value = "";
 })
 
-// submit2.addEventListener("click",function() {
-//     process.style.display = "block";
-// });
-
-
 button1.addEventListener("click",function() {
+    var context = canvas.getContext("2d");
+    context.clearRect(0,0,canvas.width,canvas.height);
     form.reset();
     video.src = "";
+    img1.style.display = "block";
+    video.style.display = "none";
+    div7.style.display = "none";
+    div6.style.display = "none";
     form.style.display = "block";
     div.style.display = "block";
     div1.style.display = "block";
@@ -164,11 +116,10 @@ button1.addEventListener("click",function() {
     div3.style.display = "block";
     button1.setAttribute("hidden",true);
     div4.style.display = "block";
-    process.innerText = "你看不见我";
+    process.style.display = "none";
+    // process.innerText = "你看不见我";
     div4.style.textAlign = "left";
     process.style.fontSize = 20+"px";
-    div5.style.display = "none";
-    div6.style.display = "none";
 })
 
 // window.onload = function () {
@@ -180,8 +131,15 @@ button1.addEventListener("click",function() {
     //button点击事件
     document.getElementById('submit2').onclick = function () {
         point_num = 0;
+        div4.style.textAlign = "center";
+        process.style.fontSize = 30+"px";
+        hidden_some_page();
         process.innerText = "正在处理中。。。";
         sendMsg();
+        // img6.style.display = "none";
+        // video2.style.display = "block";
+        // video2.src = "file:///";
+        // process.innerHTML = "处理完成";
     }
 
     function sendMsg() {
@@ -198,32 +156,32 @@ button1.addEventListener("click",function() {
                 // for(var i=0; i<res.size;i++){
 
                 // }
-
                 video2.src = res;
-                //img2.src = "file:///" + res[1];
-                alert(video2.src);
-                //alert(img2.src);
-                var context = canvas.getContext("2d");
-                context.clearRect(0,0,canvas.width,canvas.height);
-                div4.style.marginTop = -20;
-                div4.style.textAlign = "center";
-                process.style.fontSize = 30+"px";
+                img6.style.display = "none";
+                video2.style.display = "block";
                 process.innerHTML = "处理完成";
-                form.style.display = "none";
-                div.style.display = "none";
-                div1.style.display = "none";
-                div2.style.display = "none";
-                div3.style.display = "none";
-                div4.style.display = "block";
-                button1.removeAttribute("hidden");
-                div5.style.display = "block";
-                div6.style.display = "block";
+
             }
         });
         input1.value = "";
         input2.value = "";
         input3.value = "";
         input4.value = "";
+    }
+    
+    function hidden_some_page() {
+        process.style.display = "block";        div7.style.display = "block";
+        div6_p.style.display = "block";
+        // img6.style.display = "block";
+        form.style.display = "none";
+        div.style.display = "none";
+        div1.style.display = "none";
+        div2.style.display = "none";
+        div3.style.display = "none";
+        div4.style.display = "block";
+        div6.style.display = "block";
+        button1.removeAttribute("hidden");
+        // div6.style.display = "block";
     }
 
     function ajax(obj) {
